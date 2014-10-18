@@ -1,0 +1,17 @@
+{
+  "name": "bower-registry",
+  "version": "0.0.0",
+  "authors": [
+    "Bob Gray <gray.bob98@gmail.com>"
+  ],
+  "description": "Local bower registry rest service and client built in ColdFusion",
+  "main": "index.cfm",
+  "license": "MIT",
+  "homepage": "http://github.com/bob-gray/bower-registry",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "fontawesome": "~4.2.0",
+    "open-sans": "~1.1.0"
+  }
+}
