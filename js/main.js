@@ -104,15 +104,17 @@ $(document).ready(function () {
 
 	$("#test-service button").click(hidePopup);
 
-	$("[href='#config']").on("click", function () {
-		$("#overlay, #config").addClass("show");
-		$("body").addClass("overlaid");
-	});
+	$("[href='#config']").on("click", showConfig);
 
 	if (cf.restarting.service) {
 		testService();
 	}
 });
+
+function showConfig () {
+	$("#overlay, #config").addClass("show");
+	$("body").addClass("overlaid");
+}
 
 function showPackages (packages) {
 	var template = $("#package-row").html();

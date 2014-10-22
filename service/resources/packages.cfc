@@ -1,6 +1,6 @@
 <cfcomponent restPath="packages">
 	<cffunction name="getPackages" access="remote" httpMethod="get" produces="application/json" returnType="array">
-		<cfreturn application.store.getPackages()/>
+		<cfreturn application.data.getPackages()/>
 	</cffunction>
 
 	<cffunction name="getPackage" access="remote" restPath="{name}" httpMethod="get" produces="application/json" returnType="struct">
@@ -118,7 +118,7 @@
 	<cffunction name="persistPackages" access="private" returnType="void">
 		<cfargument name="packages" type="array" required="true" />
 
-		<cfset application.store.setPackages(packages) />
-		<cfset application.store.commit("packages") />
+		<cfset application.data.setPackages(packages) />
+		<cfset application.data.commit("packages") />
 	</cffunction>
 </cfcomponent>

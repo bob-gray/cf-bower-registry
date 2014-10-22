@@ -12,7 +12,7 @@
 		<title><cfoutput>#application.config.brand#</cfoutput> Bower Registry</title>
 
 		<cf_to_js service="#application.serviceUrl#" restarting="#session.restarting#" />
-		<cfset application.resetSession() />
+		<cfset application.resetSession() />		
 
 		<script src="./bower_components/jquery/dist/jquery.min.js"></script>
 		<script src="./js/PackageService.js"></script>
@@ -31,10 +31,10 @@
 					<a href="#test-service">Test Service</a>
 				</li>
 				<li>
-					<a href="./restart/service/">Restart Service</a>
+					<a href="?restart=service">Restart Service</a>
 				</li>
 				<li>
-					<a href="./restart/client/">Restart Client</a>
+					<a href="?restart=client">Restart Client</a>
 				</li>
 				<li>
 					<a href="#config">Config</a>
@@ -67,14 +67,14 @@
 			<section class="initialize-service">
 				<p>
 					It appears the registry service is not running. This may be because it has not
-					been initialized.
+					been initialized or needs reinitialized. Click config above to change application settings.
 				</p>
 				<p>
 					Press the button below to initialize the service. If the service
 					has already been initialized, you may want to click Test Service above for
 					more information.
 				</p>
-				<a href="./restart/service/">Initialize Service</a>
+				<a href="?restart=service">Initialize Service</a>
 			</section>
 		</main>
 		<div id="overlay"></div>
@@ -114,10 +114,9 @@
 					<button type="reset">Cancel</button>
 				</div>
 			</form>
-		</section>
-		
+		</section>		
 		<section id="config" class="popup">
-			<form action="cfc/config.cfc?method=set" method="post">
+			<form action="?configure" method="POST">
 				<h2>Application Configuration</h2>
 				<a class="close" href="#"></a>
 				<cfoutput>
@@ -166,7 +165,7 @@
 			</tr>
 		</template>
 		<template id="test-item">
-			<li class="{{state}}">{{httpMethod}} {{url}} {{status}} {{statusText}}</li>
+			<li class="{{state}}">{{method}} {{url}} {{status}} {{statusText}}</li>
 		</template>
 	</body>
 </html>

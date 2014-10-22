@@ -12,9 +12,34 @@
 		<cfset application.baseUrl = getBaseUrl() />
 		<cfset application.serviceUrl = getServiceUrl() />
 		<cfset application.servicePath = root &"service/resources/" />
-		<cfset application.store = buildStore() />
+		<cfset application.data = buildStore() />
 		<cfset application.resetSession = resetSession />
 
+		<cfreturn true />
+	</cffunction>
+
+	<cffunction name="onRequestStart" access="public" returnType="boolean">
+		<cfif isDefined("url.restart") and url.restart is "client">
+			<cfset applicationStop() />
+			<cfset session.restarting.client = true />
+			<cfset reload() />
+
+		<cfelseif isDefined("url.restart") and url.restart is "service">
+			<cfset restInitApplication(application.servicePath, application.config.name) />
+			<cfset session.restarting.service = true />
+			<cfset reload() />
+
+		<cfelseif isDefined("url.configure")>
+			<cfset configure(argumentCollection=form) />
+			<cfset applicationStop() />
+			<cfset reload() />
+		</cfif>
+
+		<cfreturn true />
+	</cffunction>
+
+	<cffunction name="onSessionStart" acess="public" returnType="boolean">
+		<cfset resetSession() />
 		<cfreturn true />
 	</cffunction>
 
@@ -25,13 +50,25 @@
 		} />		
 	</cffunction>
 
-	<cffunction name="onSessionStart" acess="public" returnType="boolean">
-		<cfset resetSession() />
-		<cfreturn true />
+	<cffunction name="reload" access="public" returnType="void">
+		<cflocation url="#application.baseUrl#" addtoken="false" />
 	</cffunction>
 
-	<cffunction name="buildStore" access="private" returnType="lib.JsonStore">
-		<cfreturn new lib.JsonStore(dataPath).restore() />
+	<cffunction name="configure" access="public" returnType="void">
+		<cfargument name="name" type="string" required="true" />
+		<cfargument name="brand" type="string" required="true" />
+		<cfargument name="https" type="boolean" default="false" />
+
+		<cftry>
+			<cfset restDeleteApplication(application.servicePath) />
+			<cfcatch></cfcatch>
+		</cftry>
+		<cfset application.data.setConfig({
+			"name" = name,
+			"brand" = brand,
+			"https" = https
+		}) />
+		<cfset application.data.commitSync("config") />
 	</cffunction>
 
 	<cffunction name="getBaseUrl" access="private" returnType="string">
@@ -47,5 +84,9 @@
 		<cfset var protocol = application.config.https ? "https://" : "http://" />
 
 		<cfreturn protocol & cgi.http_host &"/rest/"& application.config.name />
+	</cffunction>
+
+	<cffunction name="buildStore" access="private" returnType="lib.JsonStore">
+		<cfreturn new lib.JsonStore(dataPath).restore() />
 	</cffunction>
 </cfcomponent>

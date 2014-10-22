@@ -62,7 +62,7 @@ PackageService.prototype.ajax = function (options) {
 	var xhr = $.ajax(options);
 
 	xhr.url = options.url;
-	xhr.httpMethod = options.method;
+	xhr.method = options.method;
 
 	return xhr;
 };

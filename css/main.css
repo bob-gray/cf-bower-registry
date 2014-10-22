@@ -207,7 +207,7 @@ menu.system a:before {
 menu.system a[href$=".bowerrc"]:before {
 	content: "\f019";
 }
-menu.system a[href^="./restart"]:before {
+menu.system a[href^="?restart"]:before {
 	content: "\f021";
 }
 menu.system a[href="#test-service"]:before {
