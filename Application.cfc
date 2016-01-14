@@ -6,6 +6,7 @@
 	<cfset this.name = left(config.name & hash(root), 64) />
 	<cfset this.customTagPaths = root &"tags" />
 	<cfset this.sessionManagement = true />
+	<cfset this.secureJSON = false />
 
 	<cffunction name="onApplicationStart" access="public" returnType="boolean">
 		<cfset application.config = config />
@@ -35,6 +36,8 @@
 			<cfset reload() />
 		</cfif>
 
+		<cfsetting showdebugoutput="false" />
+
 		<cfreturn true />
 	</cffunction>
 
@@ -47,7 +50,7 @@
 		<cfset session.restarting = {
 			"client" = false,
 			"service" = false
-		} />		
+		} />
 	</cffunction>
 
 	<cffunction name="reload" access="public" returnType="void">
@@ -63,6 +66,7 @@
 			<cfset restDeleteApplication(application.servicePath) />
 			<cfcatch></cfcatch>
 		</cftry>
+
 		<cfset application.data.setConfig({
 			"name" = name,
 			"brand" = brand,
@@ -83,7 +87,7 @@
 	<cffunction name="getServiceUrl" access="private" returnType="string">
 		<cfset var protocol = application.config.https ? "https://" : "http://" />
 
-		<cfreturn protocol & cgi.http_host &"/rest/"& application.config.name />
+		<cfreturn protocol & cgi.http_host &"/services/"& application.config.name />
 	</cffunction>
 
 	<cffunction name="buildStore" access="private" returnType="lib.JsonStore">

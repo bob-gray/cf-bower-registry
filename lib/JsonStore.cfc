@@ -20,7 +20,7 @@
 
 		<cfloop array="#paths#" index="path">
 			<cfset key = getKeyFromPath(path) />
-			
+
 			<cfif keys is "" or listFindNoCase(keys, key)>
 				<cfset json = getJSON(path) />
 				<cfset data[key] = deserializeJSON(json) />
@@ -60,14 +60,25 @@
 
 		<cfset var key = "" />
 
-		<cfif keys is "">
-			<cfset writeAll() />
+		<!--- make sure someone is notified on failure --->
+		<!--- when commit is async failure is otherwise silent --->
+		<cftry>
+			<cfif keys is "">
+				<cfset writeAll() />
 
-		<cfelse>
-			<cfloop list="#keys#" index="key">
-				<cfset write(key) />
-			</cfloop>
-		</cfif>
+			<cfelse>
+				<cfloop list="#keys#" index="key">
+					<cfset write(key) />
+				</cfloop>
+			</cfif>
+
+			<!--- TODO: make fail email a config option --->
+			<cfcatch>
+				<cfmail to="bob@iceasb.org" from="mailroom@iceasb.org" type="html" subject="ICEASB Bower Registry commit failure">
+					<cfdump var="#cfcatch#" />
+				</cfmail>
+			</cfcatch>
+		</cftry>
 	</cffunction>
 
 	<cffunction name="write" access="private" returnType="void">
@@ -77,7 +88,7 @@
 		<cfset var value = get(key) />
 		<cfset var json = serializeJSON(value) />
 
-		<cfset fileWrite(path, json, "utf-8") />		
+		<cfset fileWrite(path, json, "utf-8") />
 	</cffunction>
 
 	<cffunction name="writeAll" access="private" returnType="void">
@@ -88,13 +99,13 @@
 		</cfloop>
 	</cffunction>
 
-	<cffunction name="getPaths" access="private" returnType="array">		
+	<cffunction name="getPaths" access="private" returnType="array">
 		<cfreturn directoryList(root, true, "path", "*.json") />
 	</cffunction>
 
 	<cffunction name="getJSON" access="private" returnType="string">
 		<cfargument name="path" type="string" required="true" />
-		
+
 		<cfreturn fileRead(path, "utf-8") />
 	</cffunction>
 
@@ -102,7 +113,7 @@
 		<cfargument name="path" type="string" required="true" />
 
 		<cfset var key = getFileFromPath(path) />
-		
+
 		<cfreturn reReplace(key, "\.json$", "") />
 	</cffunction>
 
@@ -110,7 +121,7 @@
 		<cfargument name="key" type="string" required="true" />
 
 		<cfset var path = key &".json" />
-		
+
 		<cfreturn listAppend(root, path, "\") />
 	</cffunction>
 
@@ -124,7 +135,7 @@
 		<cfif isImplicitAccessor(methodPrefix)>
 			<cfinvoke method="#methodPrefix#" returnVariable="local.result">
 				<cfinvokeargument name="key" value="#key#" />
-				
+
 				<cfif methodPrefix is "set">
 					<cfinvokeargument name="value" value="#missingMethodArguments[1]#" />
 				</cfif>
@@ -142,19 +153,19 @@
 
 	<cffunction name="getMethodPrefix" access="private" returnType="string">
 		<cfargument name="methodName" type="string" required="true" />
-		
+
 		<cfreturn left(methodName, 3) />
 	</cffunction>
 
 	<cffunction name="getMethodKey" access="private" returnType="string">
 		<cfargument name="methodName" type="string" required="true" />
-		
+
 		<cfreturn reReplace(methodName, "^(?:get|set)(\w)(.*)$", "\l\1\2") />
 	</cffunction>
 
 	<cffunction name="isImplicitAccessor" access="private" returnType="boolean">
 		<cfargument name="methodPrefix" type="string" required="true" />
-		
+
 		<cfreturn methodPrefix is "get" or methodPrefix is "set" />
 	</cffunction>
 </cfcomponent>

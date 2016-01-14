@@ -27,6 +27,9 @@ main {
 	margin: 0 auto;
 	padding: 0 1em;
 }
+main {
+	padding: 0 1em 10em 1em;
+}
 menu {
 	padding: 0;
 	list-style: none;
