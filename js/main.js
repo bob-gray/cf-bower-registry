@@ -7,15 +7,18 @@ String.prototype.interpolate = function (variables) {
 };
 
 var sort = {
-	column: "name",
-	order: "ascending"
-};
-
-var packages = new PackageService(cf.service);
-
-packages.get(showPackages, showInitializeService);
+		column: "name",
+		order: "ascending"
+	},
+	packages;
 
 $(document).ready(function () {
+	var data = $(document.head).data();
+
+	packages = new PackageService(data.serviceUrl);
+
+	packages.get(showPackages, showInitializeService);
+
 	$(".search, #register-package form, #edit-package form").on("submit", preventDefault);
 	$("#edit-package .unregister, .popup .close, [href='#test-service'], [href='#config'").on("click", preventDefault);
 
@@ -106,7 +109,7 @@ $(document).ready(function () {
 
 	$("[href='#config']").on("click", showConfig);
 
-	if (cf.restarting.service) {
+	if (data.restartingService) {
 		testService();
 	}
 });

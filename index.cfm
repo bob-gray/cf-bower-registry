@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<cfoutput>
+		<head data-service-url="#application.serviceUrl#" data-restarting-service="#session.restarting.service#">
+			<meta charset="utf-8" />
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<link rel="stylesheet" href="./bower_components/open-sans/css/open-sans.min.css" />
-		<link rel="stylesheet" href="./bower_components/fontawesome/css/font-awesome.min.css" />
-		<link rel="stylesheet" href="./css/main.css" />
+			<link rel="stylesheet" href="./bower_components/open-sans/css/open-sans.min.css" />
+			<link rel="stylesheet" href="./bower_components/fontawesome/css/font-awesome.min.css" />
+			<link rel="stylesheet" href="./css/main.css" />
 
-		<title><cfoutput>#application.config.brand#</cfoutput> Bower Registry</title>
+			<title>#application.config.brand# Bower Registry</title>
 
-		<cf_to_js service="#application.serviceUrl#" restarting="#session.restarting#" />
-		<cfset application.resetSession() />		
+			<cfset application.resetSession() />
 
-		<script src="./bower_components/jquery/dist/jquery.min.js"></script>
-		<script src="./js/PackageService.js"></script>
-		<script src="./js/ServiceTester.js"></script>
-		<script src="./js/main.js"></script>
-	</head>
+			<script src="./bower_components/jquery/dist/jquery.min.js"></script>
+			<script src="./js/PackageService.js"></script>
+			<script src="./js/ServiceTester.js"></script>
+			<script src="./js/main.js"></script>
+		</head>
+	</cfoutput>
 	<body>
 		<header>
 			<menu class="system">
