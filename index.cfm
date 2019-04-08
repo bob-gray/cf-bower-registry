@@ -115,7 +115,7 @@
 					<button type="reset">Cancel</button>
 				</div>
 			</form>
-		</section>		
+		</section>
 		<section id="config" class="popup">
 			<form action="?configure" method="POST">
 				<h2>Application Configuration</h2>
